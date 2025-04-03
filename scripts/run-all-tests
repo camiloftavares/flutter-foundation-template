@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+dart pub global activate full_coverage
+
+set -e
+
+# Function to test a module
+test_module() {
+  local module_dir="$1"
+  echo ""
+  echo "##################################################################"
+  echo "Testing project $module_dir"
+  echo "##################################################################"
+  (cd "$module_dir" && flutter test) # Change directory and run tests
+  if [ $? -ne 0 ]; then
+    echo "Tests failed in $module_dir"
+    exit 1
+  fi
+}
+
+# Test all infrastructure
+find infrastructure -type f -iname pubspec.yaml | while read pubspec_path; do
+  test_module "$(dirname "$pubspec_path")"
+done
+
+# Test all features
+find features -type f -iname pubspec.yaml | while read pubspec_path; do
+  test_module "$(dirname "$pubspec_path")"
+done
+
+echo "All tests completed successfully."
