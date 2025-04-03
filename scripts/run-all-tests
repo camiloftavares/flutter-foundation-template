@@ -18,14 +18,22 @@ test_module() {
   fi
 }
 
-# Test all infrastructure
-find infrastructure -type f -iname pubspec.yaml | while read pubspec_path; do
-  test_module "$(dirname "$pubspec_path")"
+## Test all infrastructure
+for directory in $(find infrastructure -type f -iname pubspec.yaml | awk -F pubspec.yaml '{ print $1 }' | sort); do
+  echo ""
+  echo "##################################################################"
+  echo "Testing project $directory"
+  echo "##################################################################"
+  scripts/test-module test $directory
 done
 
-# Test all features
-find features -type f -iname pubspec.yaml | while read pubspec_path; do
-  test_module "$(dirname "$pubspec_path")"
+## Test all features
+for directory in $(find features -type f -iname pubspec.yaml | awk -F pubspec.yaml '{ print $1 }' | sort); do
+  echo ""
+  echo "##################################################################"
+  echo "Testing project $directory"
+  echo "##################################################################"
+  scripts/test-module test $directory
 done
 
 echo "All tests completed successfully."

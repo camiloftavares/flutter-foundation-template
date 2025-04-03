@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ ! -d $2 ]; then
+  echo "$2 isn't a valid directory"
+  exit 1
+fi
+
+directory=$2
+cd $directory
+
+if [ -f coverage/lcov.info ]; then
+  rm coverage/lcov.info
+fi
+
+if [ -f test/full_coverage_test.dart ]; then
+  rm test/full_coverage_test.dart
+fi
+
+if [ ! -d test ]; then
+  echo "  => project $directory don't have test"
+  exit 0
+fi
+
+if [[ -z $(find test/ -type f -iname '*_test.dart') ]]; then
+  echo "  => project $directory don't have test"
+  exit 0
+fi
+
+case "$1" in 
+  test)
+    dart pub global run full_coverage
+    if [ $CI ]; then
+      flutter test --coverage      
+    else 
+      flutter test --coverage -j 1
+    fi
+    ;;
+  *)
+    echo $"Usage: $0 {test}"
+    ;;
+
+esac
