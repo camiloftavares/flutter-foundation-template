@@ -1,0 +1,20 @@
+{
+    "folders": [
+        {
+            "name": "Root",
+            "path": "."
+        },
+        {
+            "name": "Application",
+            "path": "./app"
+        },
+        {
+            "name": "Features",
+            "path": "./features"
+        },
+        {
+            "name": "Infrastructures",
+            "path": "./infrastructures"
+        },
+    ],
+}
